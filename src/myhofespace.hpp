@@ -10,6 +10,7 @@
 
 namespace ngcomp
 {
+  
   class MyHighOrderFESpace : public FESpace
   {
     int order;

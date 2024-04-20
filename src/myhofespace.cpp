@@ -37,13 +37,19 @@ namespace ngcomp
 
     first_edge_dof.SetSize (n_edge+1);
     int ii = n_vert;
-    for (int i = 0; i < n_edge; i++, ii+=order-1)
-      first_edge_dof[i] = ii;
+    for (int i = 0; i < n_edge; i++)
+      {
+        first_edge_dof[i] = ii;
+        ii+=order-1;
+      }
     first_edge_dof[n_edge] = ii;
       
     first_cell_dof.SetSize (n_cell+1);
-    for (int i = 0; i < n_cell; i++, ii+=(order-1)*(order-2)/2)
-      first_cell_dof[i] = ii;
+    for (int i = 0; i < n_cell; i++)
+      {
+        first_cell_dof[i] = ii;
+        ii+=(order-1)*(order-2)/2;
+      }
     first_cell_dof[n_cell] = ii;
 
     // cout << "first_edge_dof = " << endl << first_edge_dof << endl;
@@ -64,25 +70,26 @@ namespace ngcomp
 
     // edge dofs
     for (auto e : ngel.Edges())
-      for(auto j : Range(first_edge_dof[e], first_edge_dof[e+1]))
-        dnums.Append (j);
+      for(int i = first_edge_dof[e]; i < first_edge_dof[e+1]; i++)
+        dnums.Append (i);
 
     // inner dofs
     if (ei.IsVolume())
-      for(auto j : Range(first_cell_dof[ei.Nr()], first_cell_dof[ei.Nr()+1]))
-        dnums.Append (j);
+      for(int i = first_cell_dof[ei.Nr()]; i < first_cell_dof[ei.Nr()+1]; i++)
+        dnums.Append (i);
   }
 
   
   FiniteElement & MyHighOrderFESpace :: GetFE (ElementId ei, Allocator & alloc) const
   {
     auto ngel = ma->GetElement (ei);
+    
     switch (ngel.GetType())
       {
       case ET_TRIG:
         {
           auto trig = new (alloc) MyHighOrderTrig(order);
-          trig->SetVertexNumbers (ngel.vertices);
+          trig->SetVertexNumbers (ngel.vertices); // for orientation of edge
           return *trig;
         }
       case ET_SEGM:

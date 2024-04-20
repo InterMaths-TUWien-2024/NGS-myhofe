@@ -21,7 +21,7 @@ namespace ngfem
                                      BareSliceVector<> shape) const
   {
     double x = ip(0);
-    T_CalcShape (x, shape);
+    T_CalcShape<double> (x, shape);
   }
 
 
@@ -35,8 +35,12 @@ namespace ngfem
       dshape(i, 0) = shapearray[i].DValue(0);
   }
 
+  /*
+    same function is called for shape, and dshape.
+    template type T is either 'double', or 'AutoDiff'
+   */
   template <class T>
-  void MyHighOrderSegm :: T_CalcShape (const T& x, BareSliceVector<T> shape) const
+  void MyHighOrderSegm :: T_CalcShape (const T & x, BareSliceVector<T> shape) const
   {
     T lami[2] = { x, 1-x };
     
@@ -50,7 +54,9 @@ namespace ngfem
     if (order >= 2)  
       {
         // end-points of edge, oriented by global vertex number
-        IVec<2> edge = GetVertexOrientedEdge(0);
+        IVec<2> edge = ET_trait<ET_SEGM>::GetEdge(0);
+        if (vnums[edge[1]] < vnums[edge[0]])
+          swap (edge[0], edge[1]);
 
         // xi \in [-1,1], oriented from smaller to larger global vertex number
         T xi = lami[edge[1]]-lami[edge[0]];   
@@ -72,7 +78,7 @@ namespace ngfem
   {
     double x = ip(0);
     double y = ip(1);
-    T_CalcShape (x, y, shape);
+    T_CalcShape<double> (x, y, shape);
   }
 
 
@@ -106,9 +112,12 @@ namespace ngfem
     ArrayMem<T, 20> polx(order+1), poly(order+1);
 
     for (int i = 0; i < 3; i++)
-      if (order >= 2)   // more general: order_edge[i] 
+      if (order >= 2)   // more general: order on edge
 	{
-          auto edge = GetVertexOrientedEdge(i);
+          IVec<2> edge = ET_trait<ET_TRIG>::GetEdge(i);
+          if (vnums[edge[1]] < vnums[edge[0]])
+            swap (edge[0], edge[1]);
+
           T ls = lam[edge[0]];
           T le = lam[edge[1]];
           
@@ -122,7 +131,7 @@ namespace ngfem
 	}
     
     // inner dofs
-    if (order >= 3)      // more general: cell order
+    if (order >= 3)    // more general: cell order
       {
         T bub = lam[0]*lam[1]*lam[2];
         ScaledLegendrePolynomial (order-2, lam[1]-lam[0], lam[1]+lam[0], polx);

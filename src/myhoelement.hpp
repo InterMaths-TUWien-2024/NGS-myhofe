@@ -18,13 +18,20 @@ namespace ngfem
     A Segment finite element with arbitrary order hierarchic basis
     functions
    */
-  class MyHighOrderSegm : public ScalarFiniteElement<1>, public VertexOrientedFE<ET_SEGM>
+  class MyHighOrderSegm : public ScalarFiniteElement<1> 
   {
+    size_t vnums[2];
   public:
-    using VertexOrientedFE<ET_SEGM>::SetVertexNumbers;
     MyHighOrderSegm (int order);
     virtual ELEMENT_TYPE ElementType() const { return ET_SEGM; }
 
+    template <typename T>
+    void SetVertexNumbers (const T & avnums)
+    {
+      vnums[0] = avnums[0];
+      vnums[1] = avnums[1];
+    }
+    
     virtual void CalcShape (const IntegrationPoint & ip, 
                             BareSliceVector<> shape) const;
   
@@ -43,10 +50,18 @@ namespace ngfem
    */
   class MyHighOrderTrig : public ScalarFiniteElement<2>, public VertexOrientedFE<ET_TRIG>
   {
+    size_t vnums[3];    
   public:
     MyHighOrderTrig (int order);
-    using VertexOrientedFE<ET_TRIG>::SetVertexNumbers;
     virtual ELEMENT_TYPE ElementType() const { return ET_TRIG; }
+
+    template <typename T>
+    void SetVertexNumbers (const T & avnums)
+    {
+      vnums[0] = avnums[0];
+      vnums[1] = avnums[1];
+      vnums[2] = avnums[2];
+    }
 
     virtual void CalcShape (const IntegrationPoint & ip, 
                             BareSliceVector<> shape) const;
