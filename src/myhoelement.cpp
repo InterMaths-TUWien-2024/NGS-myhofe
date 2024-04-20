@@ -6,8 +6,7 @@ It is also simple to implement high order elements ...
 */
 
 
-#include <fem.hpp>
-#include "myHOElement.hpp"
+#include "myhoelement.hpp"
 
 
 namespace ngfem

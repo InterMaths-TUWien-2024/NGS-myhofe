@@ -5,9 +5,10 @@ My own FESpace for high order finite elements
 */
 
 
-#include <comp.hpp>  
-#include "myHOElement.hpp"
-#include "myHOFESpace.hpp"
+#include <comp.hpp>
+
+#include "myhoelement.hpp"
+#include "myhofespace.hpp"
 
 
 namespace ngcomp
