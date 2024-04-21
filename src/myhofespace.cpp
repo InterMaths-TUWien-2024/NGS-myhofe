@@ -33,7 +33,7 @@ namespace ngcomp
 
     int n_vert = ma->GetNV();  
     int n_edge = ma->GetNEdges(); 
-    int n_cell = ma->GetNE();  
+    int n_face = ma->GetNFaces();  
 
     first_edge_dof.SetSize (n_edge+1);
     int ii = n_vert;
@@ -44,16 +44,16 @@ namespace ngcomp
       }
     first_edge_dof[n_edge] = ii;
       
-    first_cell_dof.SetSize (n_cell+1);
-    for (int i = 0; i < n_cell; i++)
+    first_face_dof.SetSize (n_face+1);
+    for (int i = 0; i < n_face; i++)
       {
-        first_cell_dof[i] = ii;
+        first_face_dof[i] = ii;
         ii+=(order-1)*(order-2)/2;
       }
-    first_cell_dof[n_cell] = ii;
+    first_face_dof[n_face] = ii;
 
     // cout << "first_edge_dof = " << endl << first_edge_dof << endl;
-    // cout << "first_cell_dof = " << endl << first_cell_dof << endl;
+    // cout << "first_face_dof = " << endl << first_face_dof << endl;
 
     SetNDof (ii);
   }
@@ -73,9 +73,9 @@ namespace ngcomp
       for(int i = first_edge_dof[e]; i < first_edge_dof[e+1]; i++)
         dnums.Append (i);
 
-    // inner dofs
-    if (ei.IsVolume())
-      for(int i = first_cell_dof[ei.Nr()]; i < first_cell_dof[ei.Nr()+1]; i++)
+    // face dofs
+    for (auto f : ngel.Faces())
+      for(int i = first_face_dof[ei.Nr()]; i < first_face_dof[ei.Nr()+1]; i++)
         dnums.Append (i);
   }
 

@@ -134,12 +134,15 @@ namespace ngfem
     if (order >= 3)    // more general: cell order
       {
         T bub = lam[0]*lam[1]*lam[2];
+        
         ScaledLegendrePolynomial (order-2, lam[1]-lam[0], lam[1]+lam[0], polx);
         LegendrePolynomial (order-1, 2*lam[2]-1, poly);
 
         for (int i = 0; i <= order-3; i++)
           for (int j = 0; j <= order-3-i; j++)
             shape[ii++] = bub * polx[i] * poly[j];
+        
+        // DubinerBasis::EvalMult(order-3, lam[0], lam[1], bub, shape+ii);
       }
   }
 }

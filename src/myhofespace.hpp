@@ -16,7 +16,7 @@ namespace ngcomp
     int order;
     
     Array<int> first_edge_dof;
-    Array<int> first_cell_dof;
+    Array<int> first_face_dof;
   public:
     /*
       constructor. 
