@@ -20,7 +20,7 @@ namespace ngfem
    */
   class MyHighOrderSegm : public ScalarFiniteElement<1> 
   {
-    size_t vnums[2];
+    size_t vnums[2]; // global vertex numbers
   public:
     MyHighOrderSegm (int order);
     virtual ELEMENT_TYPE ElementType() const { return ET_SEGM; }
@@ -48,9 +48,9 @@ namespace ngfem
     A triangular finite element with arbitrary order hierarchic basis
     functions
    */
-  class MyHighOrderTrig : public ScalarFiniteElement<2>, public VertexOrientedFE<ET_TRIG>
+  class MyHighOrderTrig : public ScalarFiniteElement<2>
   {
-    size_t vnums[3];    
+    size_t vnums[3]; // global vertex numbers   
   public:
     MyHighOrderTrig (int order);
     virtual ELEMENT_TYPE ElementType() const { return ET_TRIG; }

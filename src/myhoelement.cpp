@@ -14,8 +14,7 @@ namespace ngfem
 
   MyHighOrderSegm :: MyHighOrderSegm (int order)
     : ScalarFiniteElement<1> (order+1, order)
-  { ; }
-
+  { }
 
   void MyHighOrderSegm :: CalcShape (const IntegrationPoint & ip, 
                                      BareSliceVector<> shape) const
@@ -53,7 +52,7 @@ namespace ngfem
 
     if (order >= 2)  
       {
-        // end-points of edge, oriented by global vertex number
+        // start-point and end-point of edge, oriented by global vertex numbers
         IVec<2> edge = ET_trait<ET_SEGM>::GetEdge(0);
         if (vnums[edge[1]] < vnums[edge[0]])
           swap (edge[0], edge[1]);
@@ -71,7 +70,7 @@ namespace ngfem
   
   MyHighOrderTrig :: MyHighOrderTrig (int order)
     : ScalarFiniteElement<2> ((order+1)*(order+2)/2, order)
-  { ; }
+  { }
 
   void MyHighOrderTrig :: CalcShape (const IntegrationPoint & ip, 
                                      BareSliceVector<> shape) const
@@ -98,7 +97,6 @@ namespace ngfem
 
 
 
-
   template <class T>
   void MyHighOrderTrig :: T_CalcShape (const T & x, const T & y, BareSliceVector<T> shape) const
   {
@@ -118,10 +116,11 @@ namespace ngfem
           if (vnums[edge[1]] < vnums[edge[0]])
             swap (edge[0], edge[1]);
 
+          // barycentrics of start-point and end-point of edge
           T ls = lam[edge[0]];
           T le = lam[edge[1]];
           
-          // Li ((le-ls)/(le+ls)) * (le+ls)
+          // Li ((le-ls)/(le+ls)) * (le+ls)**i
           // * coincides with Li(le-ls) on edge
           // * vanishes on other edges with ls=0 and le=0
           // * is a polynomial of order i

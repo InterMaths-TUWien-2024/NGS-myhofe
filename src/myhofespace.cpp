@@ -48,7 +48,8 @@ namespace ngcomp
     for (int i = 0; i < n_face; i++)
       {
         first_face_dof[i] = ii;
-        ii+=(order-1)*(order-2)/2;
+        if (ma->GetFaceType(i) == ET_TRIG)
+          ii+=(order-1)*(order-2)/2;
       }
     first_face_dof[n_face] = ii;
 
@@ -60,7 +61,7 @@ namespace ngcomp
 
   void MyHighOrderFESpace :: GetDofNrs (ElementId ei, Array<DofId> & dnums) const
   {
-    // returns dofs of element number elnr
+    // returns dof-numbers of element ei
     dnums.SetSize(0);
     auto ngel = ma->GetElement (ei);
 
@@ -89,7 +90,9 @@ namespace ngcomp
       case ET_TRIG:
         {
           auto trig = new (alloc) MyHighOrderTrig(order);
-          trig->SetVertexNumbers (ngel.vertices); // for orientation of edge
+          // forward global vertex numbers to finite element,
+          // used for orientation of edges:
+          trig->SetVertexNumbers (ngel.vertices); 
           return *trig;
         }
       case ET_SEGM:

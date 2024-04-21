@@ -15,21 +15,15 @@ namespace ngcomp
   {
     int order;
     
+    // dofs on i-th edge: [first_edge_dof[i], first_edge_dof[i+1])
     Array<int> first_edge_dof;
+    // same for faces:
     Array<int> first_face_dof;
   public:
-    /*
-      constructor. 
-      Arguments are the access to the mesh data structure,
-      and the flags from the define command in the pde-file
-    */
     MyHighOrderFESpace (shared_ptr<MeshAccess> ama, const Flags & flags);
 
-    // a name for our new fe-space
     string GetClassName () const override
-    {
-      return "MyHighOrderFESpace";
-    }
+    { return "MyHighOrderFESpace"; }
 
     void Update() override;
 
