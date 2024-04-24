@@ -8,6 +8,6 @@ PYBIND11_MODULE(myhofe, m)
 {
   cout << "Loading myhofe library" << endl;
 
-  ngcomp::ExportFESpace<ngcomp::MyHighOrderFESpace>(m, "MyHighOrderFESpace", true)
+  ngcomp::ExportFESpace<ngcomp::MyHighOrderFESpace>(m, "MyHighOrderFESpace")
     ;
 }
