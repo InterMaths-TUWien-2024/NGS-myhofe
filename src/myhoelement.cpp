@@ -211,14 +211,14 @@ namespace ngfem
     // inner dofs
     if (order >= 3)    // more general: cell order
       {
-        T bub = lam[0]*lam[1]*lam[2]*lam[3];
+        // T bub = lam[0]*lam[1]*lam[2]*lam[3];
         
         IntegratedLegendrePolynomial (order,2*x-1,polx);
         IntegratedLegendrePolynomial (order,2*y-1,poly);
 
         for (int i = 0; i <= order-2; i++)
           for (int j = 0; j <= order-2; j++)
-            shape[ii++] = bub * polx[i+2] * poly[j+2];
+            shape[ii++] = polx[i+2] * poly[j+2];
         
         // DubinerBasis::EvalMult(order-3, lam[0], lam[1], bub, shape+ii);
       }
