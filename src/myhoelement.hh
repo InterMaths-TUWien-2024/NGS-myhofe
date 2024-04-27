@@ -74,7 +74,7 @@ namespace ngfem
     void T_CalcShape (const T & x, const T & y, BareSliceVector<T> shape) const;
   };
     
-    class MyHighOrderQuad : public ScalarFiniteElement<3>
+    class MyHighOrderQuad : public ScalarFiniteElement<2>
   {
     size_t vnums[4]; // global vertex numbers   
   public:

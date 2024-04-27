@@ -146,7 +146,7 @@ namespace ngfem
   }
     
     MyHighOrderQuad :: MyHighOrderQuad (int order)
-    : ScalarFiniteElement<3> ((order+1)*(order+1), order)
+    : ScalarFiniteElement<2> ((order+1)*(order+1), order)
   { }
 
   void MyHighOrderQuad :: CalcShape (const IntegrationPoint & ip, 
@@ -178,7 +178,7 @@ namespace ngfem
   void MyHighOrderQuad :: T_CalcShape (const T & x, const T & y, BareSliceVector<T> shape) const
   {
     T lam[4] = { (1-x)*(1-y), x*(1-y), x*y,(1-x)*y };
-    T sig[4]={(1-x)+(1-y),x+1-y,x+y,(1-x)+y};
+    T sig[4]={(1-x)+(1-y),x+(1-y),x+y,(1-x)+y};
     for (int i = 0; i < 4; i++)
       shape[i] = lam[i];
 
@@ -186,7 +186,7 @@ namespace ngfem
     
     ArrayMem<T, 20> polx(order+1), poly(order+1);
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
       if (order >= 2)   // more general: order on edge
 	{
           IVec<2> edge = ET_trait<ET_QUAD>::GetEdge(i);
@@ -211,10 +211,10 @@ namespace ngfem
     // inner dofs
     if (order >= 3)    // more general: cell order
       {
-        T bub = lam[0]*lam[1]*lam[2];
+        T bub = lam[0]*lam[1]*lam[2]*lam[3];
         
-        IntegratedLegendrePolynomial (order-1,2*x-1,polx);
-        IntegratedLegendrePolynomial (order-1,2*y-1,poly);
+        IntegratedLegendrePolynomial (order,2*x-1,polx);
+        IntegratedLegendrePolynomial (order,2*y-1,poly);
 
         for (int i = 0; i <= order-2; i++)
           for (int j = 0; j <= order-2; j++)

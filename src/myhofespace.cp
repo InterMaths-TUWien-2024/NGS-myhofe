@@ -48,8 +48,10 @@ namespace ngcomp
     for (int i = 0; i < n_face; i++)
       {
         first_face_dof[i] = ii;
-        if (ma->GetFaceType(i) == ET_TRIG)
-          ii+=(order-1)*(order-2)/2;
+        if (ma->GetFaceType(i) == ET_TRIG){
+          ii+=(order-1)*(order-2)/2;}
+        else if (ma->GetFaceType(i) == ET_QUAD){
+          ii+=(order-1)*(order-1);}
       }
     first_face_dof[n_face] = ii;
 
