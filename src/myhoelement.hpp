@@ -83,7 +83,7 @@ namespace ngfem
     {
         size_t vnums[4]; // global vertex numbers
     public:
-        MyHighOrderTrig (int order);
+        MyHighOrderQuad (int order);
         virtual ELEMENT_TYPE ElementType() const { return ET_QUAD; }
 
         template <typename T>

@@ -150,7 +150,7 @@ namespace ngfem
       functions
      */
     // TODO: I am here
-    MyHighOrderQuad :: MyHighOrderTrig (int order)
+    MyHighOrderQuad :: MyHighOrderQuad (int order)
             : ScalarFiniteElement<2> ((order+1)*(order+1), order)
     { }
 
@@ -195,7 +195,7 @@ namespace ngfem
         for (int i = 0; i < 4; i++)
             if (order >= 2)   // more general: order on edge
             {
-                IVec<2> edge = ET_trait<ET_TRIG>::GetEdge(i);
+                IVec<2> edge = ET_trait<ET_QUAD>::GetEdge(i);
                 if (vnums[edge[1]] < vnums[edge[0]])
                     swap (edge[0], edge[1]);
 
@@ -206,9 +206,9 @@ namespace ngfem
                 T sigma_e = sigma[edge[1]];
 
                 // Li (le-ls) * (sigma_s + sigma_e)
-                IntegratedLegendrePolynomial (order, le-ls, polx);
+                IntegratedLegendrePolynomial (order, sigma_e-sigma_s, polx);
                 for (int j = 2; j <= order; j++)
-                    shape[ii++] = polx[j] * (sigma_e + sigma_s);
+                    shape[ii++] = polx[j] * (le + ls);
             }
 
         // inner dofs
