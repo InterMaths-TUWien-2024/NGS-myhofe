@@ -73,6 +73,38 @@ namespace ngfem
     template <class T>
     void T_CalcShape (const T & x, const T & y, BareSliceVector<T> shape) const;
   };
+
+    /*
+    A quadrilateral finite element with arbitrary order hierarchic basis
+    functions
+   */
+    // TODO: I am here
+    class MyHighOrderQuad : public ScalarFiniteElement<2>
+    {
+        size_t vnums[4]; // global vertex numbers
+    public:
+        MyHighOrderTrig (int order);
+        virtual ELEMENT_TYPE ElementType() const { return ET_QUAD; }
+
+        template <typename T>
+        void SetVertexNumbers (const T & avnums)
+        {
+            vnums[0] = avnums[0];
+            vnums[1] = avnums[1];
+            vnums[2] = avnums[2];
+            vnums[3] = avnums[3];
+        }
+
+        virtual void CalcShape (const IntegrationPoint & ip,
+                                BareSliceVector<> shape) const;
+
+        virtual void CalcDShape (const IntegrationPoint & ip,
+                                 BareSliceMatrix<> dshape) const;
+
+    private:
+        template <class T>
+        void T_CalcShape (const T & x, const T & y, BareSliceVector<T> shape) const;
+    };
 }
 
 #endif

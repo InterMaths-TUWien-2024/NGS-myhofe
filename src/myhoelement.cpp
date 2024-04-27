@@ -66,7 +66,7 @@ namespace ngfem
       }
   }
 
-
+// TODO: triangle
   
   MyHighOrderTrig :: MyHighOrderTrig (int order)
     : ScalarFiniteElement<2> ((order+1)*(order+2)/2, order)
@@ -144,4 +144,86 @@ namespace ngfem
         // DubinerBasis::EvalMult(order-3, lam[0], lam[1], bub, shape+ii);
       }
   }
+
+    /*
+      A quadrilateral finite element with arbitrary order hierarchic basis
+      functions
+     */
+    // TODO: I am here
+    MyHighOrderQuad :: MyHighOrderTrig (int order)
+            : ScalarFiniteElement<2> ((order+1)*(order+1), order)
+    { }
+
+    void MyHighOrderQuad :: CalcShape (const IntegrationPoint & ip,
+                                       BareSliceVector<> shape) const
+    {
+        double x = ip(0);
+        double y = ip(1);
+        T_CalcShape<double> (x, y, shape);
+    }
+
+
+    void MyHighOrderQuad :: CalcDShape (const IntegrationPoint & ip,
+                                        BareSliceMatrix<> dshape) const
+    {
+        AutoDiff<2> adx (ip(0), 0);
+        AutoDiff<2> ady (ip(1), 1);
+        Vector<AutoDiff<2> > shapearray(ndof);
+        T_CalcShape<AutoDiff<2>> (adx, ady, shapearray);
+        for (int i = 0; i < ndof; i++)
+        {
+            dshape(i, 0) = shapearray[i].DValue(0);
+            dshape(i, 1) = shapearray[i].DValue(1);
+        }
+    }
+
+
+
+    template <class T>
+    void MyHighOrderQuad :: T_CalcShape (const T & x, const T & y, BareSliceVector<T> shape) const
+    {
+        T lam[4] = { (1-x)*(1-y), x*(1-y), x*y, (1-x)*y };
+        T sigma[4] = { (1-x)+(1-y), x+(1-y), x+y, (1-x)+y };
+
+        for (int i = 0; i < 4; i++)
+            shape[i] = lam[i];
+
+        int ii = 4;
+
+        ArrayMem<T, 20> polx(order+1), poly(order+1);
+
+        for (int i = 0; i < 4; i++)
+            if (order >= 2)   // more general: order on edge
+            {
+                IVec<2> edge = ET_trait<ET_TRIG>::GetEdge(i);
+                if (vnums[edge[1]] < vnums[edge[0]])
+                    swap (edge[0], edge[1]);
+
+                // barycentrics of start-point and end-point of edge
+                T ls = lam[edge[0]];
+                T le = lam[edge[1]];
+                T sigma_s = sigma[edge[0]];
+                T sigma_e = sigma[edge[1]];
+
+                // Li (le-ls) * (sigma_s + sigma_e)
+                IntegratedLegendrePolynomial (order, le-ls, polx);
+                for (int j = 2; j <= order; j++)
+                    shape[ii++] = polx[j] * (sigma_e + sigma_s);
+            }
+
+        // inner dofs
+        if (order >= 3)    // more general: cell order
+        {
+//            T bub = lam[0]*lam[1]*lam[2];
+
+            IntegratedLegendrePolynomial (order, 2*x-1, polx);
+            IntegratedLegendrePolynomial (order, 2*y-1, poly);
+
+            for (int i = 2; i <= order; i++)
+                for (int j = 2; j <= order; j++)
+                    shape[ii++] = polx[i] * poly[j];
+
+            // DubinerBasis::EvalMult(order-3, lam[0], lam[1], bub, shape+ii);
+        }
+    }
 }

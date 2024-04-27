@@ -50,6 +50,8 @@ namespace ngcomp
         first_face_dof[i] = ii;
         if (ma->GetFaceType(i) == ET_TRIG)
           ii+=(order-1)*(order-2)/2;
+        if (ma->GetFaceType(i) == ET_QUAD)
+          ii+=(order-1)*(order-1);
       }
     first_face_dof[n_face] = ii;
 
@@ -94,6 +96,14 @@ namespace ngcomp
           // used for orientation of edges:
           trig->SetVertexNumbers (ngel.vertices); 
           return *trig;
+        }
+      case ET_QUAD:
+        {
+          auto quad = new (alloc) MyHighOrderQuad(order);
+          // forward global vertex numbers to finite element,
+          // used for orientation of edges:
+          quad->SetVertexNumbers (ngel.vertices);
+          return *quad;
         }
       case ET_SEGM:
         {
