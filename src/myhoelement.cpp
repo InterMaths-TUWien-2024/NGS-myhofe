@@ -209,7 +209,7 @@ namespace ngfem
 	}
     
     // inner dofs
-    if (order >= 3)    // more general: cell order
+    if (order >= 2)    // more general: cell order
       {
         // T bub = lam[0]*lam[1]*lam[2]*lam[3];
         
