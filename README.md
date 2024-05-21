@@ -1,5 +1,8 @@
 # NGS-myhofe
 
+An NGSolve add-on project for teaching how to implement high-order finite elements
+
+
 Installation:
 
     git clone https://github.com/TUWien-ASC/NGS-myfe.git
