@@ -11,3 +11,8 @@ Installation:
     cd build
     cmake ..
     make -j4 install
+
+
+Quick installation:
+
+    pip3 install git+https://github.com/TUWien-ASC/NGS-myhofe -v 
