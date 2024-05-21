@@ -15,4 +15,4 @@ Installation:
 
 Quick installation:
 
-    pip3 install git+https://github.com/TUWien-ASC/NGS-myhofe -v 
+    python3 -m pip install git+https://github.com/TUWien-ASC/NGS-myhofe -v 
